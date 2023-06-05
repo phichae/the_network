@@ -2,7 +2,7 @@
   <header>
     <Navbar />
   </header>
-  <main>
+  <main class="primary-bg">
     <router-view />
   </main>
    <footer class="bg-dark text-light">
@@ -31,10 +31,13 @@ export default {
   --main-height: calc(100vh - 32px - 64px);
 }
 
-
 footer {
   display: grid;
   place-content: center;
   height: 32px;
+}
+
+.primary-bg {
+  background-color: #38424A;
 }
 </style>

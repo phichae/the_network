@@ -1,19 +1,70 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <div class="home-card p-5 bg-white rounded elevation-3">
-      <img src="https://bcw.blob.core.windows.net/public/img/8600856373152463" alt="CodeWorks Logo"
-        class="rounded-circle">
-      <h1 class="my-5 bg-dark text-white p-3 rounded text-center">
-        Vue 3 Starter
-      </h1>
+  <section class="row container-fluid">
+    <div class="col-3">
+
     </div>
+    <div class="col-6">
+      <div class="container">
+        <div class="row my-2">
+          <div class="col-12" v-for="p in posts" :key="p.id">
+            <PostCard :post="p" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-3" v-for="a in ads" :key="a.title">
+      <AdCard :ad="a" />
+    </div>
+  </section>
+  <div class="p-4">
+    <button :disabled="!newer" @click="changePage(newer)" class="btn btn-light mx-2">Previous</button>
+    <button :disabled="!older" @click="changePage(older)" class="btn btn-light mx-2">Next</button>
   </div>
 </template>
 
 <script>
+import { onMounted } from 'vue';
+import Pop from '../utils/Pop.js';
+import { postsService } from '../services/PostsService.js'
+import { computed } from '@vue/reactivity';
+import { AppState } from '../AppState.js';
+import { adsService } from '../services/AdsService.js';
+
 export default {
   setup() {
-    return {}
+    onMounted(() => {
+      getPosts()
+    })
+    onMounted(()=> {
+      getAds()
+    })
+    async function getPosts(){
+      try {
+        await postsService.getPosts()
+      } catch (error) {
+        Pop.error(error)
+      }
+    }
+    async function getAds(){
+      try {
+        await adsService.getAds()
+      } catch (error) {
+        Pop.error(error)
+      }
+    }
+    return {
+      ads: computed(()=> AppState.ads),
+      posts: computed(()=> AppState.posts),
+      newer: computed(() => AppState.newer),
+      older: computed(() => AppState.older),
+      async changePage(url) {
+        try {
+          await postsService.changePage(url)
+        } catch (error) {
+          Pop.error(error)
+        }
+      }
+    }
   }
 }
 </script>
