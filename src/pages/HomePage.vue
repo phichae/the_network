@@ -1,4 +1,9 @@
 <template>
+  <section class="row justify-content-center">
+    <div class="col-6">
+      <SearchBar :search="s" />
+    </div>
+  </section>
   <section class="row container-fluid">
     <div class="col-3">
 
@@ -12,8 +17,10 @@
         </div>
       </div>
     </div>
-    <div class="col-3" v-for="a in ads" :key="a.title">
-      <AdCard :ad="a" />
+    <div class="col-3">
+      <div v-for="a in ads" :key="a.title">
+        <AdCard :ad="a" />
+      </div>
     </div>
   </section>
   <div class="p-4">
@@ -29,8 +36,12 @@ import { postsService } from '../services/PostsService.js'
 import { computed } from '@vue/reactivity';
 import { AppState } from '../AppState.js';
 import { adsService } from '../services/AdsService.js';
+import AdCard from '../components/AdCard.vue'
+import PostCard from "../components/PostCard.vue";
+import SearchBar from '../components/SearchBar.vue'
 
 export default {
+  components: { PostCard, AdCard, SearchBar },
   setup() {
     onMounted(() => {
       getPosts()

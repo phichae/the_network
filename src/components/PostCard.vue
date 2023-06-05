@@ -1,9 +1,9 @@
 <template>
-    <div class="post-card elevation-1">
+    <div class="post-card elevation-1 rounded">
         <div class="d-flex gap-3 align-items-center">
             <img class="post-cover-img" :src="post.imgUrl" :alt="post.body">
             <div>
-                <p class="fs-3">
+                <p class="fs-5">
                     {{ post.body }}
                 </p>
                 <p>
@@ -12,7 +12,7 @@
                         @{{ post.creator.name }} - Created At: {{ post.createdAt }}
                     </em>
                     <p>
-                        {{ post.likes.length }}
+                        Likes: {{ post.likes.length }}
                     </p>
                 </p>
             </div>

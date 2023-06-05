@@ -1,5 +1,5 @@
 <template>
-    <div class="rounded">
+    <div class="rounded my-2">
         <img class="img-fluid" :src="ad.square" :alt="ad.title">
     </div>
 
