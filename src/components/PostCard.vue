@@ -7,13 +7,18 @@
                     {{ post.body }}
                 </p>
                 <p>
-                    <img class="post-maker rounded-circle" :src="post.creator.picture" :alt="post.creator.name">
+                    <router-link :to="{name: 'Profile', params: { id: post.creatorId }}">
+                        <img class="post-maker rounded-circle" :src="post.creator.picture" :alt="post.creator.name">
+                    </router-link>
                     <em>
                         @{{ post.creator.name }} - Created At: {{ post.createdAt }}
                     </em>
                     <p>
                         Likes: {{ post.likes.length }}
                     </p>
+                    <div class="align-content-bottom text-end">
+                        <button @click="deletePost(post.id)" v-if="post.creator.id == account.id" class="btn btn-outline-danger"><i class="mdi mdi-delete"></i></button>
+                    </div>
                 </p>
             </div>
         </div>
@@ -22,7 +27,11 @@
 
 
 <script>
+import { computed } from "@vue/reactivity";
 import { Post } from "../models/Post.js";
+import { AppState } from "../AppState.js";
+import Pop from "../utils/Pop.js";
+import { postsService } from "../services/PostsService.js";
 
 export default {
     
@@ -30,7 +39,17 @@ export default {
         post: {type: Post, required: true}
     },
     setup(){
-        return {}
+        return {
+
+            async deletePost(postId){
+                try {
+                    await postsService.deletePost(postId)
+                } catch (error) {
+                    Pop.toast(error.message)
+                }
+            },
+            account: computed(()=> AppState.account)
+        }
     }
 }
 </script>

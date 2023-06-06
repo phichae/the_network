@@ -6,7 +6,19 @@
   </section>
   <section class="row container-fluid">
     <div class="col-3">
-
+      <div v-if="account">
+        <form @submit.prevent="submitPostForm()">
+          <div class="form-floating my-3">
+            <input type="url" class="form-control" id="floatingInput" placeholder="Image URL" name="imgUrl" required v-model="editable.imgUrl">
+            <label for="img-url">Image Url</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="body" class="form-control" id="floatingInput" placeholder="Caption" name="body" required v-model="editable.body">
+            <label for="body">Caption</label>
+          </div>
+          <button type="submit" class="btn btn-outline-dark">Create</button>
+        </form>
+      </div>
     </div>
     <div class="col-6">
       <div class="container">
@@ -30,7 +42,7 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import Pop from '../utils/Pop.js';
 import { postsService } from '../services/PostsService.js'
 import { computed } from '@vue/reactivity';
@@ -43,6 +55,7 @@ import SearchBar from '../components/SearchBar.vue'
 export default {
   components: { PostCard, AdCard, SearchBar },
   setup() {
+    const editable = ref({})
     onMounted(() => {
       getPosts()
     })
@@ -64,16 +77,28 @@ export default {
       }
     }
     return {
+      editable,
       ads: computed(()=> AppState.ads),
       posts: computed(()=> AppState.posts),
       newer: computed(() => AppState.newer),
       older: computed(() => AppState.older),
+      account: computed(()=> AppState.account),
       async changePage(url) {
         try {
           await postsService.changePage(url)
         } catch (error) {
           Pop.error(error)
         }
+      },
+
+      async submitPostForm(){
+        try {
+          const formData = editable.value
+          await postsService.createPost(formData)
+          editable.value = {}
+        } catch (error) {
+          Pop.error(error)
+        } 
       }
     }
   }

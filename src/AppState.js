@@ -14,5 +14,7 @@ export const AppState = reactive({
 
   ads: [],
 
-  query: {}
+  query: {},
+
+  activeProfile: null,
 })
